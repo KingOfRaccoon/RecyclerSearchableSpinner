@@ -29,19 +29,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val users = listOf("John Doe", "Ellen Cunningham", "Carmen Walker", "Mike Walker", "Edgar Bourn", "Richard Robson", "Ralph Poe", "Max Smith")
+        val adapter = StartWithArrayAdapter()
+
+        val users = listOf(
+            "John Doe",
+            "Ellen Cunningham",
+            "Carmen Walker",
+            "Mike Walker",
+            "Edgar Bourn",
+            "Richard Robson",
+            "Ralph Poe",
+            "Max Smith"
+        )
         searchableSpinner.showHint = true
-        searchableSpinner.adapter = StringHintArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, users, "Select Item")
+        searchableSpinner.adapter = StringHintArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            users,
+            "Select Item"
+        )
         searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<Any?> {
             override fun onSearchableItemClicked(item: Any?, position: Int) {
+                println(item)
+                println("position: $position")
                 if (position > 0) {
-                    searchableSpinner.setSelection(position)
+                    searchableSpinner.setSelection(position, true)
                 } else {
                     searchableSpinner.setSelection(Spinner.INVALID_POSITION)
                 }
             }
         }
 
-        searchableSpinner.setCustomDialogAdapter(StartWithArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, users))
+        searchableSpinner.setCustomDialogAdapter(adapter)
+        adapter.differ.submitList(users.mapIndexed { index, s -> SimpleItem(s.split(" ").first(), s, index)  })
     }
 }

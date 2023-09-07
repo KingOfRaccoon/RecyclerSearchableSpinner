@@ -1,18 +1,21 @@
 package pl.utkala.searchablespinnerdemo
 
-import android.content.Context
-import android.widget.ArrayAdapter
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.CheckedTextView
 import android.widget.Filter
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import pl.utkala.searchablespinner.FilterableListAdapter
 
-class StartWithArrayAdapter(context: Context, resourceId: Int, private val items: List<String>) : ArrayAdapter<String>(context, resourceId, items) {
-    private var mData = items
+class StartWithArrayAdapter : FilterableListAdapter<SimpleItem, StartWithArrayAdapter.StartViewHolder>(itemCallback) {
 
-    override fun getCount(): Int {
-        return mData.size
-    }
-
-    override fun getItem(position: Int): String {
-        return mData[position]
+    val differ = AsyncListDiffer(this, itemCallback).apply {
+        addListListener { _, currentList ->
+            this@StartWithArrayAdapter.submitList(currentList)
+        }
     }
 
     override fun getFilter(): Filter {
@@ -21,18 +24,18 @@ class StartWithArrayAdapter(context: Context, resourceId: Int, private val items
                 val result = FilterResults()
                 if (!constraint.isNullOrBlank()) {
                     synchronized(this) {
-                        val filteredItems = ArrayList<String>()
-                        for (i in (items.indices)) {
-                            if (items[i].startsWith(constraint, ignoreCase = true))
-                                filteredItems.add(items[i])
+                        val filteredItems = ArrayList<SimpleItem>()
+                        for (i in (differ.currentList.indices)) {
+                            if (differ.currentList[i].filter.startsWith(constraint, ignoreCase = true))
+                                filteredItems.add(differ.currentList[i])
                         }
                         result.count = filteredItems.size
                         result.values = filteredItems
                     }
                 } else {
                     synchronized(this) {
-                        result.values = items
-                        result.count = items.size
+                        result.values = differ.currentList
+                        result.count = differ.currentList.size
                     }
                 }
                 return result
@@ -40,9 +43,40 @@ class StartWithArrayAdapter(context: Context, resourceId: Int, private val items
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 if (results?.values != null) {
-                    mData = results.values as List<String>
-                    notifyDataSetChanged()
+                    submitList(results.values as List<SimpleItem>)
                 }
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StartViewHolder {
+        return StartViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(android.R.layout.simple_spinner_dropdown_item, parent, false)
+        )
+    }
+
+    override fun onBindViewHolder(holder: StartViewHolder, position: Int) {
+        holder.bind(currentList[position])
+    }
+
+    inner class StartViewHolder(view: View) : ViewHolder(view) {
+        fun bind(item: SimpleItem) {
+            itemView.findViewById<CheckedTextView>(android.R.id.text1).text = item.name
+            itemView.setOnClickListener{
+                clickListener?.onClick(absoluteAdapterPosition)
+            }
+        }
+    }
+
+    companion object {
+        val itemCallback = object : DiffUtil.ItemCallback<SimpleItem>() {
+            override fun areItemsTheSame(oldItem: SimpleItem, newItem: SimpleItem): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: SimpleItem, newItem: SimpleItem): Boolean {
+                return oldItem == newItem
             }
         }
     }

@@ -34,7 +34,7 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
     private var mCloseText: String? = null
     private var mItems: MutableList<Any?> = mutableListOf(null)
     private var mDialogBackground: Drawable? = null
-    private var mCustomDialogAdapter: ArrayAdapter<*>? = null
+    private var mCustomDialogAdapter: FilterableListAdapter<*, *>? = null
     var onSearchableItemClick: OnSearchableItemClick<Any?>? = null
     var showHint: Boolean = false
 
@@ -73,7 +73,7 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
     }
 
     override fun onSearchableItemClicked(item: Any?, position: Int) {
-        val itemPosition = mItems.indexOf(item) + (if (showHint) 1 else 0)
+        val itemPosition = position + (if (showHint) 1 else 0)
         if (onSearchableItemClick != null) {
             onSearchableItemClick?.onSearchableItemClicked(item, itemPosition)
         } else {
@@ -142,7 +142,7 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
         init()
     }
 
-    fun <T : ArrayAdapter<*>> setCustomDialogAdapter(adapter: T) {
+    fun <T : FilterableListAdapter<*, *>> setCustomDialogAdapter(adapter: T) {
         mCustomDialogAdapter = adapter
         if (searchDialog.isVisible) searchDialog.dismiss()
         init()
