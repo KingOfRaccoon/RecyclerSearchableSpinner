@@ -45,9 +45,13 @@ class MainActivity : AppCompatActivity() {
         searchableSpinner.adapter = StringHintArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
-            users,
+            listOf(),
             "Select Item"
-        )
+        ).apply {
+            clear()
+            addAll(users)
+        }
+
         searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<Any?> {
             override fun onSearchableItemClicked(item: Any?, position: Int) {
                 println(item)

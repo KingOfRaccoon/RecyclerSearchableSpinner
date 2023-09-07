@@ -19,6 +19,12 @@ class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects:
         addAll(items)
     }
 
+    override fun clear() {
+        super.clear()
+        if (hint != null)
+            add(hint)
+    }
+
     override fun isEnabled(position: Int): Boolean {
         return if (hint.isNullOrBlank()) {
             super.isEnabled(position)
