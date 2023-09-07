@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.utkala.searchablespinner.ItemSpinner
 import pl.utkala.searchablespinner.OnSearchableItemClick
 import pl.utkala.searchablespinner.StringHintArrayAdapter
 
@@ -52,9 +53,10 @@ class MainActivity : AppCompatActivity() {
             addAll(users)
         }
 
-        searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<Any?> {
-            override fun onSearchableItemClicked(item: Any?, position: Int) {
+        searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<ItemSpinner?> {
+            override fun onSearchableItemClicked(item: ItemSpinner?, position: Int) {
                 println(item)
+                println(item?.javaClass)
                 println("position: $position")
                 if (position > 0) {
                     searchableSpinner.setSelection(position, true)

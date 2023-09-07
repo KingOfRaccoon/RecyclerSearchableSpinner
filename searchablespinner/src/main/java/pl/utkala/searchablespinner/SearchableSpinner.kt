@@ -26,7 +26,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 
-class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTouchListener, OnSearchableItemClick<Any?> {
+class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTouchListener, OnSearchableItemClick<ItemSpinner?> {
 
     private lateinit var searchDialog: SearchableSpinnerDialog
     private val mContext: Context
@@ -35,7 +35,7 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
     private var mItems: MutableList<Any?> = mutableListOf(null)
     private var mDialogBackground: Drawable? = null
     private var mCustomDialogAdapter: FilterableListAdapter<*, *>? = null
-    var onSearchableItemClick: OnSearchableItemClick<Any?>? = null
+    var onSearchableItemClick: OnSearchableItemClick<ItemSpinner?>? = null
     var showHint: Boolean = false
 
     constructor(context: Context) : super(context) {
@@ -72,7 +72,7 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
         return true
     }
 
-    override fun onSearchableItemClicked(item: Any?, position: Int) {
+    override fun onSearchableItemClicked(item: ItemSpinner?, position: Int) {
         val itemPosition = position + (if (showHint) 1 else 0)
         if (onSearchableItemClick != null) {
             onSearchableItemClick?.onSearchableItemClicked(item, itemPosition)

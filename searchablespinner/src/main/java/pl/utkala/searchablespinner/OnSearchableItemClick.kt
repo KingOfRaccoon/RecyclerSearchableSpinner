@@ -18,6 +18,6 @@ package pl.utkala.searchablespinner
 
 import java.io.Serializable
 
-interface OnSearchableItemClick<T>: Serializable{
+interface OnSearchableItemClick<T: ItemSpinner?>: Serializable{
     fun onSearchableItemClicked(item: T?, position: Int)
 }

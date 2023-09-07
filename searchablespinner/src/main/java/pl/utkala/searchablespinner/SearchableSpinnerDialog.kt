@@ -40,7 +40,7 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
     private var mDialogBackground: Drawable? = null
     private var mDismissListener: DialogInterface.OnClickListener? = null
     private var mCustomAdapter: FilterableListAdapter<*, *>? = null
-    var onSearchableItemClick: OnSearchableItemClick<Any?>? = null
+    var onSearchableItemClick: OnSearchableItemClick<ItemSpinner?>? = null
 
     companion object {
         @JvmStatic
@@ -62,7 +62,7 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (savedInstanceState != null) {
             onSearchableItemClick =
-                savedInstanceState.getSerializable(CLICK_LISTENER) as OnSearchableItemClick<Any?>
+                savedInstanceState.getSerializable(CLICK_LISTENER) as OnSearchableItemClick<ItemSpinner?>
         }
         val layoutInflater = LayoutInflater.from(activity)
         val rootView = layoutInflater.inflate(R.layout.dialog_layout, null)
@@ -92,14 +92,10 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
         mListView?.adapter = listAdapter
         listAdapter?.clickListener = object: OnClickListener {
             override fun onClick(position: Int) {
-                println("onItemClick: $position")
-                println((mListView?.adapter as? FilterableListAdapter<*, *>)?.currentList?.get(
-                    position
-                )?.name)
                 onSearchableItemClick?.onSearchableItemClicked(
                     (mListView?.adapter as? FilterableListAdapter<*, *>)?.currentList?.get(
                         position
-                    )?.name, position
+                    ), position
                 )
                 dialog?.dismiss()
             }
