@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 
 class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects: List<String>, private val hint: String? = null) : ArrayAdapter<String>(context, textViewResourceId) {
-    private val items: List<String>
+    private val items: MutableList<String>
 
     init {
         items = if (hint.isNullOrBlank()) {
-            objects
+            objects.toMutableList()
         } else {
             val hintedList = objects.toMutableList()
             hintedList.add(0, hint)
@@ -23,13 +23,13 @@ class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects:
         collection.forEach {
             add(it)
         }
-//        if (items.contains())
-//        super.addAll(collection)
     }
 
     override fun add(`object`: String?) {
-        if (!items.contains(`object`))
+        if (!items.contains(`object`)) {
+            items.add(`object`.orEmpty())
             super.add(`object`)
+        }
     }
 
     override fun clear() {

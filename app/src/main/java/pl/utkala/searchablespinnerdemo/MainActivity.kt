@@ -50,7 +50,10 @@ class MainActivity : AppCompatActivity() {
             "Select Item"
         ).apply {
             clear()
-            addAll(users + users.map { "$it test" })
+            println("count")
+            println(users.size)
+            addAll(users + users)
+            println(count)
         }
 
         searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<ItemSpinner?> {
