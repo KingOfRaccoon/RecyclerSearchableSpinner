@@ -19,6 +19,19 @@ class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects:
         addAll(items)
     }
 
+    override fun addAll(collection: Collection<String>) {
+        collection.forEach {
+            add(it)
+        }
+//        if (items.contains())
+//        super.addAll(collection)
+    }
+
+    override fun add(`object`: String?) {
+        if (!items.contains(`object`))
+            super.add(`object`)
+    }
+
     override fun clear() {
         super.clear()
         if (hint != null)

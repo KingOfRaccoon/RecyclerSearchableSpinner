@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import pl.utkala.searchablespinner.FilterableListAdapter
+import pl.utkala.searchablespinner.ItemSpinner
 
 class StartWithArrayAdapter :
-    FilterableListAdapter<SimpleItem, StartWithArrayAdapter.StartViewHolder>(itemCallback) {
+    FilterableListAdapter<ItemSpinner, StartWithArrayAdapter.StartViewHolder>(itemCallback) {
 
     override fun getFilter(): Filter {
         return object : Filter() {
@@ -19,7 +20,7 @@ class StartWithArrayAdapter :
                 val result = FilterResults()
                 if (!constraint.isNullOrBlank()) {
                     synchronized(this) {
-                        val filteredItems = ArrayList<SimpleItem>()
+                        val filteredItems = ArrayList<ItemSpinner>()
                         for (i in (differ.currentList.indices)) {
                             if (differ.currentList[i].filter.startsWith(
                                     constraint,
@@ -60,7 +61,7 @@ class StartWithArrayAdapter :
     }
 
     inner class StartViewHolder(view: View) : ViewHolder(view) {
-        fun bind(item: SimpleItem) {
+        fun bind(item: ItemSpinner) {
             itemView.findViewById<CheckedTextView>(android.R.id.text1).text = item.name
             itemView.setOnClickListener {
                 clickListener?.onClick(
@@ -72,12 +73,12 @@ class StartWithArrayAdapter :
     }
 
     companion object {
-        val itemCallback = object : DiffUtil.ItemCallback<SimpleItem>() {
-            override fun areItemsTheSame(oldItem: SimpleItem, newItem: SimpleItem): Boolean {
+        val itemCallback = object : DiffUtil.ItemCallback<ItemSpinner>() {
+            override fun areItemsTheSame(oldItem: ItemSpinner, newItem: ItemSpinner): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: SimpleItem, newItem: SimpleItem): Boolean {
+            override fun areContentsTheSame(oldItem: ItemSpinner, newItem: ItemSpinner): Boolean {
                 return oldItem == newItem
             }
         }

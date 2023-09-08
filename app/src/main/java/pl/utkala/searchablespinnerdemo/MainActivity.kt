@@ -19,7 +19,7 @@ package pl.utkala.searchablespinnerdemo
 import android.os.Bundle
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.searchableSpinner
 import pl.utkala.searchablespinner.ItemSpinner
 import pl.utkala.searchablespinner.OnSearchableItemClick
 import pl.utkala.searchablespinner.StringHintArrayAdapter
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             "Select Item"
         ).apply {
             clear()
-            addAll(users)
+            addAll(users + users.map { "$it test" })
         }
 
         searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<ItemSpinner?> {
@@ -67,6 +67,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         searchableSpinner.setCustomDialogAdapter(adapter)
-        adapter.differ.submitList(users.mapIndexed { index, s -> SimpleItem(s.split(" ").first(), s, index)  })
+        adapter.differ.submitList(users.mapIndexed { index, s ->
+            SimpleItem(s.split(" ").first(), s, index)
+        } + users.mapIndexed { index, s ->
+            TestItem(s.split(" ").first(), "$s test", index)
+        })
     }
 }
