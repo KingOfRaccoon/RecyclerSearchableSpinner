@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             println(users.size)
             addAll(users + users)
             println(count)
+            notifyDataSetChanged()
         }
 
         searchableSpinner.onSearchableItemClick = object : OnSearchableItemClick<ItemSpinner?> {

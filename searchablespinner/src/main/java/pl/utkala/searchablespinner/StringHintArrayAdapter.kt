@@ -34,6 +34,7 @@ class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects:
 
     override fun clear() {
         super.clear()
+        items.clear()
         if (hint != null)
             add(hint)
     }
