@@ -93,7 +93,7 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
         listAdapter?.clickListener = object: OnClickListener {
             override fun onClick(position: Int) {
                 onSearchableItemClick?.onSearchableItemClicked(
-                    (mListView?.adapter as? FilterableListAdapter<*, *>)?.currentList?.get(
+                    (mListView?.adapter as? FilterableListAdapter<*, *>)?.differ?.currentList?.get(
                         position
                     ), position
                 )

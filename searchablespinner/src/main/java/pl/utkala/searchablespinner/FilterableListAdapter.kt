@@ -17,6 +17,7 @@
 package pl.utkala.searchablespinner
 
 import android.widget.Filterable
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,4 +26,10 @@ abstract class FilterableListAdapter<T: ItemSpinner, VH : RecyclerView.ViewHolde
     itemCallback: ItemCallback<T>
 ) : ListAdapter<T, VH>(itemCallback), Filterable{
     var clickListener: OnClickListener? = null
+
+    val differ = AsyncListDiffer(this, itemCallback).apply {
+        addListListener { _, currentList ->
+            this@FilterableListAdapter.submitList(currentList)
+        }
+    }
 }

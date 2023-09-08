@@ -10,13 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import pl.utkala.searchablespinner.FilterableListAdapter
 
-class StartWithArrayAdapter : FilterableListAdapter<SimpleItem, StartWithArrayAdapter.StartViewHolder>(itemCallback) {
-
-    val differ = AsyncListDiffer(this, itemCallback).apply {
-        addListListener { _, currentList ->
-            this@StartWithArrayAdapter.submitList(currentList)
-        }
-    }
+class StartWithArrayAdapter :
+    FilterableListAdapter<SimpleItem, StartWithArrayAdapter.StartViewHolder>(itemCallback) {
 
     override fun getFilter(): Filter {
         return object : Filter() {
@@ -26,7 +21,11 @@ class StartWithArrayAdapter : FilterableListAdapter<SimpleItem, StartWithArrayAd
                     synchronized(this) {
                         val filteredItems = ArrayList<SimpleItem>()
                         for (i in (differ.currentList.indices)) {
-                            if (differ.currentList[i].filter.startsWith(constraint, ignoreCase = true))
+                            if (differ.currentList[i].filter.startsWith(
+                                    constraint,
+                                    ignoreCase = true
+                                )
+                            )
                                 filteredItems.add(differ.currentList[i])
                         }
                         result.count = filteredItems.size
@@ -63,8 +62,11 @@ class StartWithArrayAdapter : FilterableListAdapter<SimpleItem, StartWithArrayAd
     inner class StartViewHolder(view: View) : ViewHolder(view) {
         fun bind(item: SimpleItem) {
             itemView.findViewById<CheckedTextView>(android.R.id.text1).text = item.name
-            itemView.setOnClickListener{
-                clickListener?.onClick(absoluteAdapterPosition)
+            itemView.setOnClickListener {
+                clickListener?.onClick(
+                    if (differ.currentList.indexOf(item) != -1) differ.currentList.indexOf(item) else
+                        absoluteAdapterPosition
+                )
             }
         }
     }
