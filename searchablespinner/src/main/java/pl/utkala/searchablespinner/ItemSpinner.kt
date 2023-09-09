@@ -16,4 +16,6 @@
 
 package pl.utkala.searchablespinner
 
-abstract class ItemSpinner(open val filter: String, open val name: String, open val id: Int)
+import java.io.Serializable
+
+abstract class ItemSpinner(open val filter: String, open val name: String, open val id: Int): Serializable
