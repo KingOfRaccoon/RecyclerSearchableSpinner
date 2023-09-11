@@ -75,7 +75,8 @@ class MainActivity : AppCompatActivity() {
         searchableSpinner.setCustomDialogAdapter(adapter)
         adapter.differ.submitList(users.mapIndexed { index, s ->
             SimpleItem(s.split(" ").first(), s, index)
-        } + users.mapIndexed { index, s ->
+        })
+        adapter.differ.submitList(adapter.differ.currentList + users.mapIndexed { index, s ->
             TestItem(s.split(" ").first(), "$s test", index)
         })
     }

@@ -26,9 +26,9 @@ abstract class FilterableListAdapter<T: ItemSpinner, VH : RecyclerView.ViewHolde
     itemCallback: ItemCallback<T>
 ) : ListAdapter<T, VH>(itemCallback), Filterable{
     var clickListener: OnClickListener? = null
-    private var filterString: String? = null
+    protected var filterString: String? = null
 
-    val differ = AsyncListDiffer(this, itemCallback).apply {
+    open val differ = AsyncListDiffer(this, itemCallback).apply {
         addListListener { _, currentList ->
             if (filterString.isNullOrEmpty())
                 this@FilterableListAdapter.submitList(currentList)
@@ -37,7 +37,7 @@ abstract class FilterableListAdapter<T: ItemSpinner, VH : RecyclerView.ViewHolde
         }
     }
 
-    fun setFilter(filterString: String?){
+    open fun setFilter(filterString: String?){
         this.filterString = filterString
         filter.filter(filterString)
     }
