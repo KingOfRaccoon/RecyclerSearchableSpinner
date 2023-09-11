@@ -39,6 +39,10 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
     private var mDialogBackgroundColor: Int? = null
     private var mDialogBackground: Drawable? = null
     private var mCornersSize: Float? = null
+    private var mSearchColorLine: Int? = null
+    private var mSearchColorMag: Int? = null
+    private var mSearchColorText: Int? = null
+    private var mSearchColorButtonClose: Int? = null
     private var mCustomDialogAdapter: FilterableListAdapter<*, *>? = null
     var onSearchableItemClick: OnSearchableItemClick<ItemSpinner?>? = null
     var showHint: Boolean = false
@@ -107,6 +111,7 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
 
     private fun init() {
         searchDialog = SearchableSpinnerDialog.getInstance(mDialogBackground, mCustomDialogAdapter, mCornersSize)
+        searchDialog.setColorsSearchView(mSearchColorLine, mSearchColorMag, mSearchColorText, mSearchColorButtonClose)
         searchDialog.setTitle(mDialogTitle)
         searchDialog.setDismissText(mCloseText)
         searchDialog.setColorTitle(mDialogTitleColor)
@@ -121,6 +126,11 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
 
         for (i in 0 until attributes.indexCount) {
             when (val attr = attributes.getIndex(i)) {
+                R.styleable.SearchableSpinner_searchLineColor -> mSearchColorLine = attributes.getColor(attr, Color.BLACK)
+                R.styleable.SearchableSpinner_searchMagColor -> mSearchColorMag = attributes.getColor(attr, Color.BLACK)
+                R.styleable.SearchableSpinner_searchTextColor -> mSearchColorText = attributes.getColor(attr, Color.BLACK)
+                R.styleable.SearchableSpinner_searchButtonCloseColor -> mSearchColorButtonClose = attributes.getColor(attr, Color.BLACK)
+
                 R.styleable.SearchableSpinner_cornersSize -> mCornersSize =
                     attributes.getDimension(
                         attr, context.resources.displayMetrics.density * 12

@@ -24,6 +24,10 @@
         android:layout_margin="16dp"
         android:layout_gravity="center_horizontal"
         app:showHint="true"
+        app:searchLineColor="#FF0000"
+        app:searchMagColor="@android:color/black"
+        app:searchTextColor="@color/colorPrimary"
+        app:searchButtonCloseColor="@color/colorAccent"
         app:dialogTitle="@string/search_dialog_title" />
 
 </LinearLayout>

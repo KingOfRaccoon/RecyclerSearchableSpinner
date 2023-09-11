@@ -19,12 +19,16 @@ package pl.utkala.searchablespinner
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +44,10 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
     private var mDialogTitle: String? = null
     private var mDialogBackground: Drawable? = null
     private var mCornersSize: Float? = null
+    private var mSearchColorLine: Int? = null
+    private var mSearchColorMag: Int? = null
+    private var mSearchColorText: Int? = null
+    private var mSearchColorButtonClose: Int? = null
     private var mDismissListener: DialogInterface.OnClickListener? = null
     private var mCustomAdapter: FilterableListAdapter<*, *>? = null
     var onSearchableItemClick: OnSearchableItemClick<ItemSpinner?>? = null
@@ -82,13 +90,45 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
             rootViewBinding.root.radius = it
         }
 
+        mSearchColorText?.let { colorText ->
+            rootViewBinding.searchView.findViewById<EditText>(R.id.search_src_text)?.let {
+                it.setTextColor(colorText)
+                it.setHintTextColor(colorText)
+            }
+        }
+
+        mSearchColorLine?.let { colorLine ->
+            rootViewBinding.searchView.findViewById<View>(R.id.search_plate)?.backgroundTintList =
+                ColorStateList.valueOf(colorLine)
+            rootViewBinding.searchView.findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
+                ?.backgroundTintList = ColorStateList.valueOf(colorLine)
+
+        }
+
+        mSearchColorButtonClose?.let { colorCloseButton ->
+            rootViewBinding.searchView.findViewById<ImageView>(R.id.search_close_btn)?.let {
+                it.setImageDrawable(it.drawable.let {
+                    it.setTint(colorCloseButton)
+                    it
+                })
+            }
+        }
+
+        mSearchColorMag?.let { colorMag ->
+            rootViewBinding.searchView.findViewById<ImageView>(R.id.search_mag_icon)?.let {
+                it.setImageDrawable(it.drawable.let {
+                    it.setTint(colorMag)
+                    it
+                })
+            }
+        }
+
         mDialogBackgroundColor?.let {
             rootViewBinding.root.setCardBackgroundColor(it)
         }
         mDialogTitleColor?.let {
             rootViewBinding.textTitleCard.setTextColor(it)
         }
-
 
 
 //        val dismiss =
@@ -183,5 +223,17 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
 
     fun setColorBackground(colorBackground: Int?) {
         mDialogBackgroundColor = colorBackground
+    }
+
+    fun setColorsSearchView(
+        colorLine: Int?,
+        colorMag: Int?,
+        colorText: Int?,
+        colorCloseButton: Int?
+    ) {
+        mSearchColorLine = colorLine
+        mSearchColorMag = colorMag
+        mSearchColorText = colorText
+        mSearchColorButtonClose = colorCloseButton
     }
 }

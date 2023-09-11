@@ -16,6 +16,7 @@
 
 package pl.utkala.searchablespinnerdemo
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +48,8 @@ class MainActivity : AppCompatActivity() {
             this,
             android.R.layout.simple_spinner_dropdown_item,
             listOf(),
-            "Select Item"
+            "Select Item",
+            Color.RED
         ).apply {
             clear()
             println("count")

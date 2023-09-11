@@ -59,7 +59,7 @@ class StringHintArrayAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         return super.getView(position, convertView, parent).also {
-            if (position == 0 && !hint.isNullOrBlank() && colorHint != null)
+            if (colorHint != null)
                 (it as? AppCompatCheckedTextView)?.setTextColor(colorHint)
         }
     }

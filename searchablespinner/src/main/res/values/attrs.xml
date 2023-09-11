@@ -22,5 +22,9 @@
         <attr name="dialogTitleColor" format="color" />
         <attr name="dialogBackgroundColor" format="color" />
         <attr name="cornersSize" format="dimension" />
+        <attr name="searchLineColor" format="color"/>
+        <attr name="searchMagColor" format="color"/>
+        <attr name="searchTextColor" format="color"/>
+        <attr name="searchButtonCloseColor" format="color"/>
     </declare-styleable>
 </resources>
