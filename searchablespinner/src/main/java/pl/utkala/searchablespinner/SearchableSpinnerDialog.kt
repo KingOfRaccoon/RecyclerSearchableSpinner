@@ -19,6 +19,7 @@ package pl.utkala.searchablespinner
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,32 +30,35 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.dialog_layout.view.listView
 import kotlinx.android.synthetic.main.dialog_layout.view.searchView
+import pl.utkala.searchablespinner.databinding.DialogLayoutBinding
 
 class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener,
     SearchView.OnCloseListener {
-    private var items: MutableList<Any?> = arrayListOf("")
     private var mListView: RecyclerView? = null
     private var mSearchView: SearchView? = null
     private var mDismissText: String? = null
     private var mDialogTitle: String? = null
     private var mDialogBackground: Drawable? = null
+    private var mCornersSize: Float? = null
     private var mDismissListener: DialogInterface.OnClickListener? = null
     private var mCustomAdapter: FilterableListAdapter<*, *>? = null
     var onSearchableItemClick: OnSearchableItemClick<ItemSpinner?>? = null
+    private var mDialogTitleColor: Int? = null
+    private var mDialogBackgroundColor: Int? = null
 
     companion object {
         @JvmStatic
         val CLICK_LISTENER = "click_listener"
 
         fun getInstance(
-            items: MutableList<Any?>,
             dialogBackground: Drawable? = null,
-            customAdapter: FilterableListAdapter<*, *>? = null
+            customAdapter: FilterableListAdapter<*, *>? = null,
+            cornersSize: Float?
         ): SearchableSpinnerDialog {
             val dialog = SearchableSpinnerDialog()
-            dialog.items = items
             dialog.mDialogBackground = dialogBackground
             dialog.mCustomAdapter = customAdapter
+            dialog.mCornersSize = cornersSize
             return dialog
         }
     }
@@ -65,20 +69,33 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
                 savedInstanceState.getSerializable(CLICK_LISTENER) as OnSearchableItemClick<ItemSpinner?>
         }
         val layoutInflater = LayoutInflater.from(activity)
-        val rootView = layoutInflater.inflate(R.layout.dialog_layout, null)
+        val rootViewBinding =
+            DialogLayoutBinding.bind(layoutInflater.inflate(R.layout.dialog_layout, null))
 
-        setView(rootView)
+        setView(rootViewBinding.root)
 
         val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setView(rootView)
         val title =
             if (mDialogTitle.isNullOrBlank()) getString(R.string.search_dialog_title) else mDialogTitle
-        alertBuilder.setTitle(title)
+        rootViewBinding.textTitleCard.text = title
+        mCornersSize?.let {
+            rootViewBinding.root.radius = it
+        }
 
-        val dismiss =
-            if (mDismissText.isNullOrBlank()) getString(R.string.search_dialog_close) else mDismissText
-        alertBuilder.setPositiveButton(dismiss, mDismissListener)
+        mDialogBackgroundColor?.let {
+            rootViewBinding.root.setCardBackgroundColor(it)
+        }
+        mDialogTitleColor?.let {
+            rootViewBinding.textTitleCard.setTextColor(it)
+        }
 
+
+
+//        val dismiss =
+//            if (mDismissText.isNullOrBlank()) getString(R.string.search_dialog_close) else mDismissText
+//        alertBuilder.setPositiveButton(dismiss, mDismissListener)
+
+        alertBuilder.setView(rootViewBinding.root)
         return alertBuilder.create()
     }
 
@@ -90,7 +107,7 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
         listAdapter = mCustomAdapter
         mListView = rootView.listView
         mListView?.adapter = listAdapter
-        listAdapter?.clickListener = object: OnClickListener {
+        listAdapter?.clickListener = object : OnClickListener {
             override fun onClick(position: Int) {
                 onSearchableItemClick?.onSearchableItemClicked(
                     (mListView?.adapter as? FilterableListAdapter<*, *>)?.differ?.currentList?.get(
@@ -141,9 +158,7 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if (mDialogBackground != null) {
-            dialog?.window?.setBackgroundDrawable(mDialogBackground)
-        }
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(0))
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -160,5 +175,13 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
 
     fun setTitle(dialogTitle: String?) {
         mDialogTitle = dialogTitle
+    }
+
+    fun setColorTitle(colorTitle: Int?) {
+        mDialogTitleColor = colorTitle
+    }
+
+    fun setColorBackground(colorBackground: Int?) {
+        mDialogBackgroundColor = colorBackground
     }
 }

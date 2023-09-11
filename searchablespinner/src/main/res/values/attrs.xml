@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2018 Mateusz Utkala (DonMat)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +16,11 @@
 
 <resources>
     <declare-styleable name="SearchableSpinner">
-        <attr name="closeText" format="string"/>
-        <attr name="dialogTitle" format="string"/>
+        <attr name="closeText" format="string" />
+        <attr name="dialogTitle" format="string" />
         <attr name="showHint" format="boolean" />
+        <attr name="dialogTitleColor" format="color" />
+        <attr name="dialogBackgroundColor" format="color" />
+        <attr name="cornersSize" format="dimension" />
     </declare-styleable>
 </resources>

@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             clear()
             println("count")
             println(users.size)
-            addAll(users + users)
+            addAll(users + users.map { "$it test" })
             println(count)
             notifyDataSetChanged()
         }

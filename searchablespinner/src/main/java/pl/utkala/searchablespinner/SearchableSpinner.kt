@@ -19,6 +19,7 @@ package pl.utkala.searchablespinner
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.DialogInterface
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -26,14 +27,18 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 
-class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTouchListener, OnSearchableItemClick<ItemSpinner?> {
+class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTouchListener,
+    OnSearchableItemClick<ItemSpinner?> {
 
     private lateinit var searchDialog: SearchableSpinnerDialog
     private val mContext: Context
     private var mDialogTitle: String? = null
     private var mCloseText: String? = null
     private var mItems: MutableList<Any?> = mutableListOf(null)
+    private var mDialogTitleColor: Int? = null
+    private var mDialogBackgroundColor: Int? = null
     private var mDialogBackground: Drawable? = null
+    private var mCornersSize: Float? = null
     private var mCustomDialogAdapter: FilterableListAdapter<*, *>? = null
     var onSearchableItemClick: OnSearchableItemClick<ItemSpinner?>? = null
     var showHint: Boolean = false
@@ -49,7 +54,11 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
         init()
     }
 
-    constructor (context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor (context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         this.mContext = context
         setAttributes(context, attrs)
         init()
@@ -97,9 +106,11 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
     }
 
     private fun init() {
-        searchDialog = SearchableSpinnerDialog.getInstance(mItems, dialogBackground = mDialogBackground, customAdapter = mCustomDialogAdapter)
+        searchDialog = SearchableSpinnerDialog.getInstance(mDialogBackground, mCustomDialogAdapter, mCornersSize)
         searchDialog.setTitle(mDialogTitle)
         searchDialog.setDismissText(mCloseText)
+        searchDialog.setColorTitle(mDialogTitleColor)
+        searchDialog.setColorBackground(mDialogBackgroundColor)
         searchDialog.onSearchableItemClick = this
 
         setOnTouchListener(this)
@@ -110,9 +121,23 @@ class SearchableSpinner : androidx.appcompat.widget.AppCompatSpinner, View.OnTou
 
         for (i in 0 until attributes.indexCount) {
             when (val attr = attributes.getIndex(i)) {
+                R.styleable.SearchableSpinner_cornersSize -> mCornersSize =
+                    attributes.getDimension(
+                        attr, context.resources.displayMetrics.density * 12
+                    )
+
+                R.styleable.SearchableSpinner_dialogBackgroundColor -> mDialogBackgroundColor =
+                    attributes.getColor(attr, Color.WHITE)
+
+                R.styleable.SearchableSpinner_dialogTitleColor -> mDialogTitleColor =
+                    attributes.getColor(attr, Color.BLACK)
+
                 R.styleable.SearchableSpinner_closeText -> mCloseText = attributes.getString(attr)
-                R.styleable.SearchableSpinner_dialogTitle -> mDialogTitle = attributes.getString(attr)
-                R.styleable.SearchableSpinner_showHint -> showHint = attributes.getBoolean(attr, false)
+                R.styleable.SearchableSpinner_dialogTitle -> mDialogTitle =
+                    attributes.getString(attr)
+
+                R.styleable.SearchableSpinner_showHint -> showHint =
+                    attributes.getBoolean(attr, false)
             }
         }
         attributes.recycle()

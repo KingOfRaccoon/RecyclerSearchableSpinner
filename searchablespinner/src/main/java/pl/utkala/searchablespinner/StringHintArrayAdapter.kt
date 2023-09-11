@@ -1,11 +1,19 @@
 package pl.utkala.searchablespinner
 
 import android.content.Context
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.widget.AppCompatCheckedTextView
 
-class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects: List<String>, private val hint: String? = null) : ArrayAdapter<String>(context, textViewResourceId) {
+class StringHintArrayAdapter(
+    context: Context,
+    textViewResourceId: Int,
+    objects: List<String>,
+    private val hint: String? = null,
+    private val colorHint: Int? = null
+) : ArrayAdapter<String>(context, textViewResourceId) {
     private val items: MutableList<String>
 
     init {
@@ -24,6 +32,7 @@ class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects:
             add(it)
         }
     }
+
 
     override fun add(`object`: String?) {
         if (!items.contains(`object`)) {
@@ -46,6 +55,15 @@ class StringHintArrayAdapter(context: Context, textViewResourceId: Int, objects:
             position != 0
         }
     }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
+        return super.getView(position, convertView, parent).also {
+            if (position == 0 && !hint.isNullOrBlank() && colorHint != null)
+                (it as? AppCompatCheckedTextView)?.setTextColor(colorHint)
+        }
+    }
+
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         return super.getDropDownView(position, convertView, parent)
