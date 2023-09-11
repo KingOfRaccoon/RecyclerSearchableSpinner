@@ -20,7 +20,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -171,9 +170,9 @@ class SearchableSpinnerDialog : DialogFragment(), SearchView.OnQueryTextListener
 
     override fun onQueryTextChange(query: String?): Boolean {
         if (query.isNullOrBlank()) {
-            (mListView?.adapter as FilterableListAdapter<*, *>).filter.filter(null)
+            (mListView?.adapter as FilterableListAdapter<*, *>).setFilter(null)
         } else {
-            (mListView?.adapter as FilterableListAdapter<*, *>).filter.filter(query)
+            (mListView?.adapter as FilterableListAdapter<*, *>).setFilter(query)
         }
         return true
     }
